@@ -1,24 +1,26 @@
 package dice
 
 type BuffDieRollBonus struct {
-	BaseDiePoolBuff
-	BaseDiePoolBuffAmount
-	BaseDiePoolBuffContext
+	*BaseDiePoolBuff
+	*BaseDiePoolBuffAmount
+	*BaseDiePoolBuffContext
+}
+
+func MakeBuffDieRollBonus(duration int, amount int, context DieRollContext) IDiePoolBuff {
+	return &BuffDieRollBonus{
+		BaseDiePoolBuff:        makeBaseDiePoolBuff(duration),
+		BaseDiePoolBuffAmount:  makeBaseDiePoolBuffAmount(amount),
+		BaseDiePoolBuffContext: makeBaseDiePoolBuffContext(context),
+	}
 }
 
 func (buff *BuffDieRollBonus) Buff(buffContext interface{}) {
 
 	switch casted := buffContext.(type) {
 	case *BuffContextRollDice:
-		if (buff.context & int(casted.context)) != 0 {
+		if (buff.context & casted.context) != 0 {
 			casted.bonus += buff.amount
 		}
 		break
 	}
-}
-
-type BuffParamsDieRollBonus struct {
-	BuffParams
-	BuffParamsAmount
-	BuffParamsDieRollContext
 }

@@ -1,7 +1,11 @@
 package dice
 
 type BuffNumDieRollsByCost struct {
-	BaseDiePoolBuff
+	*BaseDiePoolBuff
+}
+
+func MakeBuffNumDieRollsByCost(duration int) IDiePoolBuff {
+	return &BuffNumDieRollsByCost{BaseDiePoolBuff: makeBaseDiePoolBuff(duration)}
 }
 
 func (buff *BuffNumDieRollsByCost) Buff(buffContext interface{}) {
