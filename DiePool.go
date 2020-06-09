@@ -1,8 +1,7 @@
 package dice
 
 import (
-	"./LinkedList"
-	"fmt"
+	"github.com/foozlemoozle/LinkedList"
 	"math/rand"
 	"time"
 )
@@ -13,15 +12,9 @@ type Die struct {
 	sides int
 }
 
-//NOTE TO SELF: func (caller (*)TYPE) FuncName(param PARAM_TYPE) RETURN_TYPE
-func (die *Die) Roll(bonus int) int {
-	rand.NewSource(time.Now())
-	//Intn is 0 <= VALUE < n.  So a 1-6 is Intn(6) + 1
-	return rand.Intn(die.sides) + 1
-}
-
 func (die *Die) Roll() int {
-	return die.Roll(0)
+	rand.NewSource(time.Now().Unix())
+	return rand.Intn(die.sides) + 1
 }
 
 /*END*/
@@ -31,7 +24,7 @@ func (die *Die) Roll() int {
 type IDiePool interface {
 	Id() int
 	HasDice() bool
-	RollDice(context int, diceCost int) int
+	RollDice(context DieRollContext, diceCost int) int
 	RemoveDice(amount int)
 	AddDice(maxToAdd int)
 	ResetToMaxSize()
@@ -39,22 +32,22 @@ type IDiePool interface {
 	RemoveBuff(buff *IDiePoolBuff)
 }
 
-func ContestPools(actor IDiePool, actorContext int, defender IDiePool, defenderContext int) int {
+func ContestPools(actor IDiePool, actorContext DieRollContext, defender IDiePool, defenderContext DieRollContext) int {
 	actorResult := actor.RollDice(actorContext, 1)
 	defenderResult := defender.RollDice(defenderContext, 1)
 
 	if actorResult > defenderResult {
 		return Actor
 	} else {
-		return Defender
+		return Target
 	}
 }
 
 type DiePoolAction func(input int) int
 
 const (
-	Actor    = iota
-	Defender = iota
+	Actor  = iota
+	Target = iota
 )
 
 type DieRollContext int
@@ -70,14 +63,13 @@ const (
 
 type diePool struct {
 	id      int
-	dice    *LinkedList.IStack
+	dice    LinkedList.IStack
 	maxSize int
 	sides   int
-
-	buffs *LinkedList.IQueue
+	buffs   LinkedList.IList
 }
 
-func DiePool(size int, sides int, id int) *IDiePool {
+func DiePool(size int, sides int, id int) IDiePool {
 	pool := &diePool{
 		id:      id,
 		maxSize: size,
@@ -91,6 +83,14 @@ func DiePool(size int, sides int, id int) *IDiePool {
 	}
 
 	return pool
+}
+
+func (pool *diePool) Id() int {
+	return pool.id
+}
+
+func (pool *diePool) HasDice() bool {
+	return pool.dice.Count() > 0
 }
 
 func (pool *diePool) ChangePoolSize(newSize int) {
@@ -110,8 +110,9 @@ func (pool *diePool) ChangePoolSize(newSize int) {
 
 func (pool *diePool) RollDice(context DieRollContext, dieCost int) int {
 
+	die := pool.dice.Peek().(*Die)
 	numRollsContext := &BuffContextNumDiceRolls{
-		roll:        pool.dice.Peek().(Die).Roll,
+		roll:        die.Roll,
 		highestRoll: 0,
 		diceCost:    dieCost,
 	}
@@ -140,7 +141,7 @@ func (pool *diePool) RemoveDice(amount int) {
 }
 
 func (pool *diePool) AddDice(maxToAdd int) {
-	maxSize = pool.calculateMaxSize()
+	maxSize := pool.calculateMaxSize()
 
 	availableSpace := maxSize - pool.dice.Count()
 	if availableSpace < maxToAdd {
@@ -188,7 +189,7 @@ func (pool *diePool) RemoveBuff(buff *IDiePoolBuff) {
 func (pool *diePool) calculateBuff(buffContext interface{}) {
 	iter := pool.buffs.Iterator()
 	for cur, ok := iter.Current(); ok; cur, ok = iter.MoveNext() {
-		cur.value.(IDiePoolBuff).Buff(buffContext)
+		cur.(IDiePoolBuff).Buff(buffContext)
 	}
 }
 

@@ -1,11 +1,7 @@
 package dice
 
-import (
-	"strconv"
-)
-
 type BuffContextNumDiceRolls struct {
-	roll        func()
+	roll        func() int
 	diceCost    int
 	highestRoll int
 }
@@ -28,7 +24,7 @@ type BuffContextAddDice struct {
 type IDiePoolBuff interface {
 	Duration() int
 
-	Initialize(params *IBuffParams) *IDiePoolBuff
+	Initialize(params *IBuffParams)
 
 	ModifyDuration(delta int)
 
@@ -60,7 +56,7 @@ type BuffParams struct {
 	duration int
 }
 
-func (buffParams *BaseBuffParams) Duration() int {
+func (buffParams *BuffParams) Duration() int {
 	return buffParams.duration
 }
 
@@ -68,7 +64,7 @@ type BuffParamsAmount struct {
 	amount int
 }
 
-func (buffParams *BaseBuffParamsAmount) Amount() int {
+func (buffParams *BuffParamsAmount) Amount() int {
 	return buffParams.amount
 }
 
@@ -103,9 +99,8 @@ func (baseBuff *BaseDiePoolBuff) Duration() int {
 	return baseBuff.duration
 }
 
-func (baseBuff *BaseDiePoolBuff) Initialize(params *IBuffParams) *IDiePoolBuff {
+func (baseBuff *BaseDiePoolBuff) Initialize(params IBuffParams) {
 	baseBuff.duration = params.Duration()
-	return baseBuff
 }
 
 func (baseBuff *BaseDiePoolBuff) ModifyDuration(delta int) {
@@ -116,11 +111,8 @@ type BaseDiePoolBuffAmount struct {
 	amount int
 }
 
-func (baseBuff *BaseDiePoolBuffAmount) Initialize(params *IBuffParams) *IDiePoolBuff {
-	baseBuff.BaseDiePoolBuff.Initialize(params)
+func (baseBuff *BaseDiePoolBuffAmount) Initialize(params IBuffParams) {
 	baseBuff.amount = params.(IBuffParamsAmount).Amount()
-
-	return baseBuff
 }
 
 type BaseDiePoolBuffContext struct {

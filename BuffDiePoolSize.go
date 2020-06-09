@@ -6,7 +6,6 @@ type BuffDiePoolSize struct {
 }
 
 func (buff *BuffDiePoolSize) Buff(buffContext interface{}) {
-	calc := buff.cachedAction(buffContext)
 
 	switch casted := buffContext.(type) {
 	case *BuffContextAddDice:

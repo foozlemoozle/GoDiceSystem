@@ -10,7 +10,7 @@ func (buff *BuffDieRollBonus) Buff(buffContext interface{}) {
 
 	switch casted := buffContext.(type) {
 	case *BuffContextRollDice:
-		if (buff.context & casted.context) != 0 {
+		if (buff.context & int(casted.context)) != 0 {
 			casted.bonus += buff.amount
 		}
 		break
