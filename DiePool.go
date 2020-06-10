@@ -22,17 +22,17 @@ func (die *Die) Roll() int {
 /* DIE POOL DEFINITION*/
 
 type IDiePool interface {
-	Id() int
+	Id() uint64
 	HasDice() bool
 	RollDice(context DieRollContext, diceCost int) int
 	RemoveDice(amount int)
 	AddDice(maxToAdd int)
 	ResetToMaxSize()
-	AddBuff(buff *IDiePoolBuff)
-	RemoveBuff(buff *IDiePoolBuff)
+	AddBuff(buff IDiePoolBuff)
+	RemoveBuff(buff IDiePoolBuff)
 }
 
-func ContestPools(actor IDiePool, actorContext DieRollContext, defender IDiePool, defenderContext DieRollContext) int {
+func contestPools(actor IDiePool, actorContext DieRollContext, defender IDiePool, defenderContext DieRollContext) int {
 	actorResult := actor.RollDice(actorContext, 1)
 	defenderResult := defender.RollDice(defenderContext, 1)
 
@@ -62,14 +62,14 @@ const (
 )
 
 type diePool struct {
-	id      int
+	id      uint64
 	dice    LinkedList.IStack
 	maxSize int
 	sides   int
 	buffs   LinkedList.IList
 }
 
-func DiePool(size int, sides int, id int) IDiePool {
+func DiePool(size int, sides int, id uint64) IDiePool {
 	pool := &diePool{
 		id:      id,
 		maxSize: size,
@@ -85,7 +85,7 @@ func DiePool(size int, sides int, id int) IDiePool {
 	return pool
 }
 
-func (pool *diePool) Id() int {
+func (pool *diePool) Id() uint64 {
 	return pool.id
 }
 
@@ -178,11 +178,11 @@ func (pool *diePool) calculateMaxSize() int {
 	return addContext.maxSize
 }
 
-func (pool *diePool) AddBuff(buff *IDiePoolBuff) {
+func (pool *diePool) AddBuff(buff IDiePoolBuff) {
 	pool.buffs.Enqueue(buff)
 }
 
-func (pool *diePool) RemoveBuff(buff *IDiePoolBuff) {
+func (pool *diePool) RemoveBuff(buff IDiePoolBuff) {
 	pool.buffs.Remove(buff)
 }
 

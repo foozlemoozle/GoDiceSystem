@@ -1,18 +1,18 @@
 package dice
 
-type BuffDiePoolSize struct {
-	*BaseDiePoolBuff
-	*BaseDiePoolBuffAmount
+type buffDiePoolSize struct {
+	*baseDiePoolBuff
+	*baseDiePoolBuffAmount
 }
 
-func MakeBuffDiePoolSize(duration int, amount int) IDiePoolBuff {
-	return &BuffDiePoolSize{
-		BaseDiePoolBuff:       makeBaseDiePoolBuff(duration),
-		BaseDiePoolBuffAmount: makeBaseDiePoolBuffAmount(amount),
+func makeBuffDiePoolSize(duration int, amount int) IDiePoolBuff {
+	return &buffDiePoolSize{
+		baseDiePoolBuff:       makeBaseDiePoolBuff(duration),
+		baseDiePoolBuffAmount: makeBaseDiePoolBuffAmount(amount),
 	}
 }
 
-func (buff *BuffDiePoolSize) Buff(buffContext interface{}) {
+func (buff *buffDiePoolSize) Buff(buffContext interface{}) {
 
 	switch casted := buffContext.(type) {
 	case *BuffContextAddDice:

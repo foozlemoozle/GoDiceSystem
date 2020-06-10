@@ -1,14 +1,14 @@
 package dice
 
-type BuffNumDieRollsByCost struct {
-	*BaseDiePoolBuff
+type buffNumDieRollsByCost struct {
+	*baseDiePoolBuff
 }
 
-func MakeBuffNumDieRollsByCost(duration int) IDiePoolBuff {
-	return &BuffNumDieRollsByCost{BaseDiePoolBuff: makeBaseDiePoolBuff(duration)}
+func makeBuffNumDieRollsByCost(duration int) IDiePoolBuff {
+	return &buffNumDieRollsByCost{baseDiePoolBuff: makeBaseDiePoolBuff(duration)}
 }
 
-func (buff *BuffNumDieRollsByCost) Buff(buffContext interface{}) {
+func (buff *buffNumDieRollsByCost) Buff(buffContext interface{}) {
 
 	switch casted := buffContext.(type) {
 	case *BuffContextNumDiceRolls:

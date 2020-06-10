@@ -1,22 +1,22 @@
 package dice
 
-type BuffRemoveDice struct {
-	*BaseDiePoolBuff
-	*BaseDiePoolBuffVsFate
+type buffRemoveDice struct {
+	*baseDiePoolBuff
+	*baseDiePoolBuffVsFate
 }
 
-func MakeBuffRemoveDice(duration int, fate IDiePool, vsFate IDiePool) IDiePoolBuff {
-	return &BuffRemoveDice{
-		BaseDiePoolBuff:       makeBaseDiePoolBuff(duration),
-		BaseDiePoolBuffVsFate: makeBaseDiePoolBuffVsFate(fate, vsFate),
+func makeBuffRemoveDice(duration int, fate IDiePool, vsFate IDiePool) IDiePoolBuff {
+	return &buffRemoveDice{
+		baseDiePoolBuff:       makeBaseDiePoolBuff(duration),
+		baseDiePoolBuffVsFate: makeBaseDiePoolBuffVsFate(fate, vsFate),
 	}
 }
 
-func (buff *BuffRemoveDice) Buff(buffContext interface{}) {
+func (buff *buffRemoveDice) Buff(buffContext interface{}) {
 
 	switch casted := buffContext.(type) {
 	case *BuffContextRemoveDice:
-		result := ContestPools(buff.vsFate, VersusFate, buff.fate, Fate)
+		result := contestPools(buff.vsFate, VersusFate, buff.fate, Fate)
 		if result == Actor {
 			casted.amountToRemove--
 		}

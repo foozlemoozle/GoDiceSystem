@@ -31,43 +31,43 @@ type IDiePoolBuff interface {
 
 /*END*/
 
-type BaseDiePoolBuff struct {
+type baseDiePoolBuff struct {
 	duration int
 }
 
-func makeBaseDiePoolBuff(duration int) *BaseDiePoolBuff {
-	return &BaseDiePoolBuff{duration: duration}
+func makeBaseDiePoolBuff(duration int) *baseDiePoolBuff {
+	return &baseDiePoolBuff{duration: duration}
 }
 
-func (baseBuff *BaseDiePoolBuff) Duration() int {
+func (baseBuff *baseDiePoolBuff) Duration() int {
 	return baseBuff.duration
 }
 
-func (baseBuff *BaseDiePoolBuff) ModifyDuration(delta int) {
+func (baseBuff *baseDiePoolBuff) ModifyDuration(delta int) {
 	baseBuff.duration += delta
 }
 
-type BaseDiePoolBuffAmount struct {
+type baseDiePoolBuffAmount struct {
 	amount int
 }
 
-func makeBaseDiePoolBuffAmount(amount int) *BaseDiePoolBuffAmount {
-	return &BaseDiePoolBuffAmount{amount: amount}
+func makeBaseDiePoolBuffAmount(amount int) *baseDiePoolBuffAmount {
+	return &baseDiePoolBuffAmount{amount: amount}
 }
 
-type BaseDiePoolBuffContext struct {
+type baseDiePoolBuffContext struct {
 	context DieRollContext
 }
 
-func makeBaseDiePoolBuffContext(context DieRollContext) *BaseDiePoolBuffContext {
-	return &BaseDiePoolBuffContext{context: context}
+func makeBaseDiePoolBuffContext(context DieRollContext) *baseDiePoolBuffContext {
+	return &baseDiePoolBuffContext{context: context}
 }
 
-type BaseDiePoolBuffVsFate struct {
+type baseDiePoolBuffVsFate struct {
 	fate   IDiePool
 	vsFate IDiePool
 }
 
-func makeBaseDiePoolBuffVsFate(fate IDiePool, vsFate IDiePool) *BaseDiePoolBuffVsFate {
-	return &BaseDiePoolBuffVsFate{fate: fate, vsFate: vsFate}
+func makeBaseDiePoolBuffVsFate(fate IDiePool, vsFate IDiePool) *baseDiePoolBuffVsFate {
+	return &baseDiePoolBuffVsFate{fate: fate, vsFate: vsFate}
 }

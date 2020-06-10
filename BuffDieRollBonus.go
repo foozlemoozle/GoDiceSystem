@@ -1,20 +1,20 @@
 package dice
 
-type BuffDieRollBonus struct {
-	*BaseDiePoolBuff
-	*BaseDiePoolBuffAmount
-	*BaseDiePoolBuffContext
+type buffDieRollBonus struct {
+	*baseDiePoolBuff
+	*baseDiePoolBuffAmount
+	*baseDiePoolBuffContext
 }
 
-func MakeBuffDieRollBonus(duration int, amount int, context DieRollContext) IDiePoolBuff {
-	return &BuffDieRollBonus{
-		BaseDiePoolBuff:        makeBaseDiePoolBuff(duration),
-		BaseDiePoolBuffAmount:  makeBaseDiePoolBuffAmount(amount),
-		BaseDiePoolBuffContext: makeBaseDiePoolBuffContext(context),
+func makeBuffDieRollBonus(duration int, amount int, context DieRollContext) IDiePoolBuff {
+	return &buffDieRollBonus{
+		baseDiePoolBuff:        makeBaseDiePoolBuff(duration),
+		baseDiePoolBuffAmount:  makeBaseDiePoolBuffAmount(amount),
+		baseDiePoolBuffContext: makeBaseDiePoolBuffContext(context),
 	}
 }
 
-func (buff *BuffDieRollBonus) Buff(buffContext interface{}) {
+func (buff *buffDieRollBonus) Buff(buffContext interface{}) {
 
 	switch casted := buffContext.(type) {
 	case *BuffContextRollDice:
