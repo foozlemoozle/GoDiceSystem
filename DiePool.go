@@ -1,3 +1,6 @@
+/// Created by Kirk George
+/// Copyright: Kirk George
+
 package dice
 
 import (
